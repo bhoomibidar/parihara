@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beneficiary Payment Status | Govt. of Karnataka</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Noto Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+            color: #222;
+        }
+
+        /* Top tricolour strip */
+        .flag-strip {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, #ff9933 0%, #ffffff 50%, #138808 100%);
+        }
+
+        /* HEADER */
+        header {
+            background: #0b3c7c; /* Deep govt blue */
+            color: white;
+            padding: 15px 15px 10px 15px;
+            border-bottom: 4px solid #ffb300; /* saffron accent */
+            text-align: center;
+        }
+        .govt-line {
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.95;
+        }
+        .dept-line {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+        .district-line {
+            font-size: 0.95rem;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+        .scheme-line {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #ffe082;
+        }
+
+        .emblem-wrapper {
+            margin: 8px auto 5px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .emblem-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 6px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+        .emblem-circle img {
+            max-width: 72px;
+            max-height: 72px;
+        }
+        .emblem-placeholder-text {
+            font-size: 0.7rem;
+            color: #0b3c7c;
+            text-align: center;
+            padding: 4px;
+        }
+
+        /* News ticker */
+        .news-ticker {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #bbdefb;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-top: 3px solid #0b3c7c;
+        }
+        .card-title {
+            margin-top: 0;
+            color: #0b3c7c;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #444;
+        }
+        .form-group input,
+        .form-group select {
+            padding: 7px 8px;
+            border: 1px solid #c5c5c5;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            background-color: #fff;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #0b3c7c;
+            outline: none;
+            box-shadow: 0 0 3px rgba(11, 60, 124, 0.4);
+        }
+
+        .btn-container {
+            margin-top: 18px;
+            text-align: right;
+        }
+        button {
+            background-color: #0b3c7c;
+            color: white;
+            border: none;
+            padding: 9px 22px;
+            font-size: 0.9rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: background 0.2s, transform 0.05s;
+        }
+        button:hover {
+            background-color: #123f84;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        button#resetBtn {
+            background-color: #757575;
+            margin-right: 8px;
+        }
+        button#resetBtn:hover {
+            background-color: #616161;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            max-height: 600px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f3f4f6;
+            color: #333;
+            position: sticky;
+            top: 0;
+            font-weight: 700;
+            border-bottom: 2px solid #ccc;
+            z-index: 1;
+        }
+        tbody tr:nth-child(even) { background-color: #fafafa; }
+        tbody tr:hover { background-color: #e8f0fe; }
+        td.calculated {
+            color: #1b5e20;
+            font-weight: 700;
+            background-color: #f1f8e9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 16px;
+            color: #666;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 12px;
+            background-color: #0b3c7c;
+            color: white;
+            font-size: 0.8rem;
+            margin-top: 30px;
+            border-top: 4px solid #138808;
+        }
+    </style>
+</head>
+<body>
+
+<div class="flag-strip"></div>
+
+<header>
+    <div class="govt-line">Government of Karnataka</div>
+
+    <div class="emblem-wrapper">
+    <div class="emblem-circle">
+        <img src="images/gok.png" alt="Government of Karnataka Emblem" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+    </div>
+</div>
+
+    <div class="dept-line">Department of Revenue & Land Records</div>
+    <div class="district-line">Bidar District</div>
+    <div class="scheme-line">Parihara Payment Status – Kharif 2025–26</div>
+</header>
+
+<div class="news-ticker">
+    <marquee behavior="scroll" direction="left">
+        Important: Parihara payment disbursement is under process. Farmers are requested to verify Farmer ID, Taluk, Hobli, Village, Survey Number, Surnoc and Hissa Number carefully before relying on the information displayed.
+    </marquee>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h3 class="card-title">🔍 Search Beneficiary Details</h3>
+        
+        <div class="filter-grid">
+            <div class="form-group">
+                <label for="filter-FarmerID">Farmer ID</label>
+                <input id="filter-FarmerID" type="text" placeholder="Ex: FID0505...">
+            </div>
+            <div class="form-group">
+                <label for="filter-Taluk">Taluk</label>
+                <select id="filter-Taluk">
+                    <option value="">All Taluks</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="filter-Hobli">Hobli</label>
+                <select id="filter-Hobli">
+                    <option value="">All Hoblis</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="filter-Village">Village</label>
+                <select id="filter-Village">
+                    <option value="">All Villages</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="filter-SurveyNo">Survey No</label>
+                <input id="filter-SurveyNo" type="text" placeholder="Ex: 341">
+            </div>
+            <div class="form-group">
+                <label for="filter-Surnoc">Surnoc</label>
+                <input id="filter-Surnoc" type="text" placeholder="Ex: *">
+            </div>
+            <div class="form-group">
+                <label for="filter-HissaNo">Hissa No</label>
+                <input id="filter-HissaNo" type="text" placeholder="Ex: 1">
+            </div>
+            <div class="form-group">
+                <label for="filter-OwnerName">Owner Name</label>
+                <input id="filter-OwnerName" type="text" placeholder="Enter Owner Name">
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button id="resetBtn">Reset</button>
+            <button id="filterBtn">Search Record</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title">📋 Payment Records</h3>
+        
+        <div class="table-responsive">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Farmer ID</th>
+                        <th>Taluk</th>
+                        <th>Hobli</th>
+                        <th>Village</th>
+                        <th>Survey No</th>
+                        <th>Surnoc</th>
+                        <th>Hissa No</th>
+                        <th>Owner Name</th>
+                        <th>Calculated Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+            <div id="loading-msg" class="loading">Connecting to database...</div>
+            <div id="no-data-msg" class="loading" style="display:none;">Please enter search details and click "Search Record".</div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    &copy; 2025 Department of Revenue & Land Records, Government of Karnataka. All Rights Reserved.
+</footer>
+
+<script>
+    // ===== CONFIGURATION =====
+    const sheetId   = '1H_UVcsLACA3wuQmB-9xzFhUciuwS3AXRQwYtX98rynU';   // Google Sheet ID
+    const apiKey    = 'AIzaSyBAcoUk7WdsMo3GA8NXfEc7e_v-ugsYddg';        // API key
+    const sheetName = 'PARIHARA_PAYMENT';
+
+    // Read a bit wider just in case, but we only use known headers
+    const range  = encodeURIComponent(sheetName + '!A1:Z');
+    const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+
+    let allData = [];
+    const tableBody = document.getElementById('table-body');
+    const loadingMsg = document.getElementById('loading-msg');
+    const noDataMsg = document.getElementById('no-data-msg');
+
+    const talukSelect   = document.getElementById('filter-Taluk');
+    const hobliSelect   = document.getElementById('filter-Hobli');
+    const villageSelect = document.getElementById('filter-Village');
+
+    const columnOrder = [
+        'FarmerID',
+        'Taluk',
+        'Hobli',
+        'Village',
+        'SurveyNo',
+        'Surnoc',
+        'HissaNo',
+        'OwnerName',
+        'CalculatedAmount'
+    ];
+
+    function populateSelect(selectEl, values, placeholder) {
+        selectEl.innerHTML = '';
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.textContent = placeholder;
+        selectEl.appendChild(defaultOpt);
+
+        values.sort().forEach(val => {
+            if (!val) return;
+            const opt = document.createElement('option');
+            opt.value = val;
+            opt.textContent = val;
+            selectEl.appendChild(opt);
+        });
+    }
+
+    function getUnique(values) {
+        return [...new Set(values.map(v => (v || '').trim()).filter(Boolean))];
+    }
+
+    async function fetchData() {
+        try {
+            console.log('Fetching:', apiUrl);
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+
+            const json = await response.json();
+            const rows = json.values;
+            console.log('Raw JSON from Sheets:', json);
+
+            if (!rows || rows.length <= 1) {
+                showNoData('No data found in sheet.');
+                return;
+            }
+
+            // Header row
+            const headers = rows[0].map(h => (h || '').trim());
+            console.log('Headers:', headers);
+
+            // Build objects using header names
+            allData = rows.slice(1).map(row => {
+                const obj = {};
+                headers.forEach((h, i) => {
+                    if (h) obj[h] = row[i] || '';
+                });
+                return obj;
+            });
+
+            console.log('Sample record:', allData[0]);
+
+            // Populate Taluk dropdown from all rows
+            const uniqueTaluk = getUnique(allData.map(r => r.Taluk));
+            populateSelect(talukSelect, uniqueTaluk, 'All Taluks');
+
+            // Initially, Hobli & Village as "All ..."
+            populateSelect(hobliSelect,   [], 'All Hoblis');
+            populateSelect(villageSelect, [], 'All Villages');
+
+            loadingMsg.style.display = 'none';
+            noDataMsg.style.display = 'block';
+            noDataMsg.textContent = 'Data loaded. Please enter search details and click "Search Record".';
+
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            loadingMsg.textContent = 'Error loading data. Check API key, Sheet sharing & console.';
+            loadingMsg.style.color = 'red';
+        }
+    }
+
+    function showNoData(msg) {
+        tableBody.innerHTML = '';
+        loadingMsg.style.display = 'none';
+        noDataMsg.style.display = 'block';
+        if (msg) noDataMsg.textContent = msg;
+    }
+
+    // --- Cascading dropdown logic ---
+
+    function updateHobliOptions() {
+        const selectedTaluk = talukSelect.value.trim();
+        let hoblis;
+
+        if (!selectedTaluk) {
+            // No taluk selected -> show all hoblis
+            hoblis = getUnique(allData.map(r => r.Hobli));
+        } else {
+            hoblis = getUnique(
+                allData
+                    .filter(r => (r.Taluk || '').trim() === selectedTaluk)
+                    .map(r => r.Hobli)
+            );
+        }
+
+        populateSelect(hobliSelect, hoblis, 'All Hoblis');
+
+        // After hobli options reset, also update village list
+        updateVillageOptions();
+    }
+
+    function updateVillageOptions() {
+        const selectedTaluk = talukSelect.value.trim();
+        const selectedHobli = hobliSelect.value.trim();
+        let villages;
+
+        if (!selectedTaluk && !selectedHobli) {
+            // No taluk & no hobli -> all villages
+            villages = getUnique(allData.map(r => r.Village));
+        } else if (selectedTaluk && !selectedHobli) {
+            // Taluk selected, hobli not -> villages in that taluk
+            villages = getUnique(
+                allData
+                    .filter(r => (r.Taluk || '').trim() === selectedTaluk)
+                    .map(r => r.Village)
+            );
+        } else if (selectedTaluk && selectedHobli) {
+            // Taluk + Hobli selected -> only villages for that combination
+            villages = getUnique(
+                allData
+                    .filter(r => (r.Taluk || '').trim() === selectedTaluk &&
+                                 (r.Hobli || '').trim() === selectedHobli)
+                    .map(r => r.Village)
+            );
+        } else {
+            // Rare: hobli selected without taluk
+            villages = getUnique(
+                allData
+                    .filter(r => (r.Hobli || '').trim() === selectedHobli)
+                    .map(r => r.Village)
+            );
+        }
+
+        populateSelect(villageSelect, villages, 'All Villages');
+    }
+
+    function displayRows(records) {
+        tableBody.innerHTML = '';
+
+        // Filter out rows where CalculatedAmount is blank
+        const validRecords = records.filter(r => {
+            const val = (r.CalculatedAmount || '').toString().trim();
+            return val !== '';
+        });
+
+        if (validRecords.length === 0) {
+            noDataMsg.style.display = 'block';
+            noDataMsg.textContent = 'No records found for given criteria.';
+            return;
+        } else {
+            noDataMsg.style.display = 'none';
+        }
+
+        const MAX_ROWS = 200;
+        const slice = validRecords.slice(0, MAX_ROWS);
+        if (validRecords.length > MAX_ROWS) {
+            noDataMsg.style.display = 'block';
+            noDataMsg.textContent = `Showing first ${MAX_ROWS} of ${validRecords.length} records. Refine filters for more precise results.`;
+        }
+
+        slice.forEach(rec => {
+            const tr = document.createElement('tr');
+
+            columnOrder.forEach(field => {
+                const td = document.createElement('td');
+                td.textContent = rec[field] || '';
+                if (field === 'CalculatedAmount') {
+                    td.classList.add('calculated');
+                }
+                tr.appendChild(td);
+            });
+
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function applyFilter() {
+        if (!allData.length) {
+            alert('Data is still loading. Please wait a moment and try again.');
+            return;
+        }
+
+        const filters = {
+            FarmerID:  document.getElementById('filter-FarmerID').value.trim().toLowerCase(),
+            Taluk:     talukSelect.value.trim().toLowerCase(),
+            Hobli:     hobliSelect.value.trim().toLowerCase(),
+            Village:   villageSelect.value.trim().toLowerCase(),
+            SurveyNo:  document.getElementById('filter-SurveyNo').value.trim().toLowerCase(),
+            Surnoc:    document.getElementById('filter-Surnoc').value.trim().toLowerCase(),
+            HissaNo:   document.getElementById('filter-HissaNo').value.trim().toLowerCase(),
+            OwnerName: document.getElementById('filter-OwnerName').value.trim().toLowerCase()
+        };
+
+        const anyFilter = Object.values(filters).some(v => v.length > 0);
+        if (!anyFilter) {
+            alert('Please enter at least one search field / dropdown before clicking "Search Record".');
+            return;
+        }
+
+        const filteredData = allData.filter(rec => {
+            const v = (field) => (rec[field] || '').toString().toLowerCase();
+            return (!filters.FarmerID  || v('FarmerID').includes(filters.FarmerID)) &&
+                   (!filters.Taluk     || v('Taluk') === filters.Taluk) &&
+                   (!filters.Hobli     || v('Hobli') === filters.Hobli) &&
+                   (!filters.Village   || v('Village') === filters.Village) &&
+                   (!filters.SurveyNo  || v('SurveyNo').includes(filters.SurveyNo)) &&
+                   (!filters.Surnoc    || v('Surnoc').includes(filters.Surnoc)) &&
+                   (!filters.HissaNo   || v('HissaNo').includes(filters.HissaNo)) &&
+                   (!filters.OwnerName || v('OwnerName').includes(filters.OwnerName));
+        });
+
+        displayRows(filteredData);
+    }
+
+    function resetFilters() {
+        document.querySelectorAll('.filter-grid input').forEach(input => input.value = '');
+        talukSelect.selectedIndex = 0;
+        updateHobliOptions(); // will reset hobli & village based on no taluk
+        hobliSelect.selectedIndex = 0;
+        updateVillageOptions();
+
+        tableBody.innerHTML = '';
+        noDataMsg.style.display = 'block';
+        noDataMsg.textContent = 'Please enter search details and click "Search Record".';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchData();
+
+        document.getElementById('filterBtn').addEventListener('click', applyFilter);
+        document.getElementById('resetBtn').addEventListener('click', resetFilters);
+
+        // Cascading events
+        talukSelect.addEventListener('change', () => {
+            updateHobliOptions();
+        });
+
+        hobliSelect.addEventListener('change', () => {
+            updateVillageOptions();
+        });
+
+        document.querySelectorAll('.filter-grid input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') applyFilter();
+            });
+        });
+    });
+</script>
+</body>
+</html>
