@@ -177,6 +177,31 @@
             background-color: #616161;
         }
 
+        /* View toggle (Success / Failure) */
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 6px;
+        }
+
+        .view-btn {
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            color: #0b3c7c;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .view-btn.active {
+            background-color: #0b3c7c;
+            color: #fff;
+            border-color: #0b3c7c;
+        }
+
         .table-responsive {
             overflow-x: auto;
             border: 1px solid #ddd;
@@ -236,10 +261,10 @@
 <header>
     <div class="govt-line">Government of Karnataka</div>
     <div class="emblem-wrapper">
-    <div class="emblem-circle">
-        <img src="gok.png" alt="Government of Karnataka Emblem" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+        <div class="emblem-circle">
+            <img src="gok.png" alt="Government of Karnataka Emblem" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+        </div>
     </div>
-</div>
 
     <div class="dept-line">Deputy Commissioner Office, Bidar</div>
     <div class="district-line">Revenue Department</div>
@@ -249,12 +274,12 @@
 <div class="news-ticker">
   <marquee behavior="scroll" direction="left" style="color: red; font-weight: bold;">
     Important: Parihara payment disbursement is under process. Farmers are requested to verify Farmer ID, Taluk, Hobli, Village, Survey Number, Surnoc and Hissa Number carefully before relying on the information displayed.
-</marquee>
-
+  </marquee>
 </div>
 
 <div class="container">
 
+    <!-- Search card -->
     <div class="card">
         <h3 class="card-title">🔍 Search Beneficiary Details</h3>
         
@@ -305,22 +330,21 @@
         </div>
     </div>
 
+    <!-- Payment records card -->
     <div class="card">
         <h3 class="card-title">📋 Payment Records</h3>
+
+        <!-- View toggle: Success vs Failure -->
+        <div class="view-toggle">
+            <button class="view-btn active" data-view="success">Successful Payments</button>
+            <button class="view-btn" data-view="failure">Failure Cases</button>
+        </div>
         
         <div class="table-responsive">
             <table id="data-table">
                 <thead>
-                    <tr>
-                        <th>Farmer ID</th>
-                        <th>Taluk</th>
-                        <th>Hobli</th>
-                        <th>Village</th>
-                        <th>Survey No</th>
-                        <th>Surnoc</th>
-                        <th>Hissa No</th>
-                        <th>Owner Name</th>
-                        <th>Calculated Amount (₹)</th>
+                    <tr id="table-header-row">
+                        <!-- Filled dynamically by JS -->
                     </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
@@ -338,24 +362,32 @@
 
 <script>
     // ===== CONFIGURATION =====
-    const sheetId   = '1H_UVcsLACA3wuQmB-9xzFhUciuwS3AXRQwYtX98rynU';   // Google Sheet ID
-    const apiKey    = 'AIzaSyBAcoUk7WdsMo3GA8NXfEc7e_v-ugsYddg';        // API key
-    const sheetName = 'PARIHARA_PAYMENT';
+    const sheetId    = '1H_UVcsLACA3wuQmB-9xzFhUciuwS3AXRQwYtX98rynU'; // Same spreadsheet
+    const apiKey     = 'AIzaSyBAcoUk7WdsMo3GA8NXfEc7e_v-ugsYddg';
 
-    // Read a bit wider just in case, but we only use known headers
-    const range  = encodeURIComponent(sheetName + '!A1:Z');
-    const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+    const sheetNameSuccess = 'PARIHARA_PAYMENT';
+    const sheetNameFailure = 'PARIHARA_FAILURE';
 
-    let allData = [];
-    const tableBody = document.getElementById('table-body');
-    const loadingMsg = document.getElementById('loading-msg');
-    const noDataMsg = document.getElementById('no-data-msg');
+    const rangeSuccess = encodeURIComponent(sheetNameSuccess + '!A1:Z');
+    const rangeFailure = encodeURIComponent(sheetNameFailure + '!A1:Z');
 
-    const talukSelect   = document.getElementById('filter-Taluk');
-    const hobliSelect   = document.getElementById('filter-Hobli');
-    const villageSelect = document.getElementById('filter-Village');
+    const apiUrlSuccess = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${rangeSuccess}?key=${apiKey}`;
+    const apiUrlFailure = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${rangeFailure}?key=${apiKey}`;
 
-    const columnOrder = [
+    let allSuccess = [];   // Successful payments
+    let allFailure = [];   // Failure cases
+    let currentView = 'success'; // 'success' or 'failure'
+
+    const tableBody       = document.getElementById('table-body');
+    const loadingMsg      = document.getElementById('loading-msg');
+    const noDataMsg       = document.getElementById('no-data-msg');
+    const tableHeaderRow  = document.getElementById('table-header-row');
+
+    const talukSelect     = document.getElementById('filter-Taluk');
+    const hobliSelect     = document.getElementById('filter-Hobli');
+    const villageSelect   = document.getElementById('filter-Village');
+
+    const columnOrderSuccess = [
         'FarmerID',
         'Taluk',
         'Hobli',
@@ -365,6 +397,18 @@
         'HissaNo',
         'OwnerName',
         'CalculatedAmount'
+    ];
+
+    const columnOrderFailure = [
+        'FarmerID',
+        'Taluk',
+        'Hobli',
+        'Village',
+        'SurveyNo',
+        'Surnoc',
+        'HissaNo',
+        'OwnerName',      // mapped from "Name as in FRUITS"
+        'PaymentStatus'
     ];
 
     function populateSelect(selectEl, values, placeholder) {
@@ -387,49 +431,83 @@
         return [...new Set(values.map(v => (v || '').trim()).filter(Boolean))];
     }
 
+    function combinedData() {
+        return [...allSuccess, ...allFailure];
+    }
+
     async function fetchData() {
         try {
-            console.log('Fetching:', apiUrl);
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP Error: ${response.status}`);
-            }
+            console.log('Fetching:', apiUrlSuccess, apiUrlFailure);
 
-            const json = await response.json();
-            const rows = json.values;
-            console.log('Raw JSON from Sheets:', json);
+            const [resSuccess, resFailure] = await Promise.all([
+                fetch(apiUrlSuccess),
+                fetch(apiUrlFailure)
+            ]);
 
-            if (!rows || rows.length <= 1) {
-                showNoData('No data found in sheet.');
-                return;
-            }
+            if (!resSuccess.ok) throw new Error('Success sheet HTTP Error: ' + resSuccess.status);
+            if (!resFailure.ok) throw new Error('Failure sheet HTTP Error: ' + resFailure.status);
 
-            // Header row
-            const headers = rows[0].map(h => (h || '').trim());
-            console.log('Headers:', headers);
+            const jsonSuccess = await resSuccess.json();
+            const jsonFailure = await resFailure.json();
 
-            // Build objects using header names
-            allData = rows.slice(1).map(row => {
-                const obj = {};
-                headers.forEach((h, i) => {
-                    if (h) obj[h] = row[i] || '';
+            // ===== SUCCESS DATA =====
+            const rowsS = jsonSuccess.values || [];
+            if (rowsS.length > 1) {
+                const headersS = rowsS[0].map(h => (h || '').trim());
+                allSuccess = rowsS.slice(1).map(row => {
+                    const obj = {};
+                    headersS.forEach((h, i) => {
+                        if (!h) return;
+                        obj[h] = row[i] || '';
+                    });
+                    // Normalize important fields
+                    obj.FarmerID         = obj.FarmerID || '';
+                    obj.OwnerName        = obj.OwnerName || obj['Name as in FRUITS'] || '';
+                    obj.CalculatedAmount = obj.CalculatedAmount || '';
+                    return obj;
                 });
-                return obj;
-            });
+            }
 
-            console.log('Sample record:', allData[0]);
+            // ===== FAILURE DATA =====
+            const rowsF = jsonFailure.values || [];
+            if (rowsF.length > 1) {
+                const headersF = rowsF[0].map(h => (h || '').trim());
+                allFailure = rowsF.slice(1).map(row => {
+                    const obj = {};
+                    headersF.forEach((h, i) => {
+                        if (!h) return;
+                        if (h === 'Name as in FRUITS') {
+                            obj.OwnerName = row[i] || '';
+                        } else {
+                            obj[h] = row[i] || '';
+                        }
+                    });
+                    obj.FarmerID      = obj.FarmerID || '';
+                    obj.PaymentStatus = obj.PaymentStatus || '';
+                    return obj;
+                });
+            }
 
-            // Populate Taluk dropdown from all rows
-            const uniqueTaluk = getUnique(allData.map(r => r.Taluk));
+            console.log('Sample success record:', allSuccess[0]);
+            console.log('Sample failure record:', allFailure[0]);
+
+            // Dropdowns: union of Taluk from both datasets
+            const uniqueTaluk = getUnique([
+                ...allSuccess.map(r => r.Taluk),
+                ...allFailure.map(r => r.Taluk)
+            ]);
             populateSelect(talukSelect, uniqueTaluk, 'All Taluks');
 
-            // Initially, Hobli & Village as "All ..."
+            // Initially Hobli & Village as "All ..."
             populateSelect(hobliSelect,   [], 'All Hoblis');
             populateSelect(villageSelect, [], 'All Villages');
 
             loadingMsg.style.display = 'none';
             noDataMsg.style.display = 'block';
-            noDataMsg.textContent = 'Data loaded. Please enter search details and click "Search Record".';
+            noDataMsg.textContent = 'Data loaded. Select view and enter search details, then click "Search Record".';
+
+            // Render initial header for success view
+            renderTableHeader('success');
 
         } catch (err) {
             console.error('Error fetching data:', err);
@@ -445,56 +523,64 @@
         if (msg) noDataMsg.textContent = msg;
     }
 
-    // --- Cascading dropdown logic ---
+    function renderTableHeader(view) {
+        tableHeaderRow.innerHTML = '';
+        const headers = (view === 'success')
+            ? ['Farmer ID','Taluk','Hobli','Village','Survey No','Surnoc','Hissa No','Owner Name','Calculated Amount (₹)']
+            : ['Farmer ID','Taluk','Hobli','Village','Survey No','Surnoc','Hissa No','Owner Name','Payment Status'];
+
+        headers.forEach(text => {
+            const th = document.createElement('th');
+            th.textContent = text;
+            tableHeaderRow.appendChild(th);
+        });
+    }
 
     function updateHobliOptions() {
         const selectedTaluk = talukSelect.value.trim();
+        const data = combinedData();
         let hoblis;
 
         if (!selectedTaluk) {
-            // No taluk selected -> show all hoblis
-            hoblis = getUnique(allData.map(r => r.Hobli));
+            hoblis = getUnique(data.map(r => r.Hobli));
         } else {
             hoblis = getUnique(
-                allData
+                data
                     .filter(r => (r.Taluk || '').trim() === selectedTaluk)
                     .map(r => r.Hobli)
             );
         }
 
         populateSelect(hobliSelect, hoblis, 'All Hoblis');
-
-        // After hobli options reset, also update village list
         updateVillageOptions();
     }
 
     function updateVillageOptions() {
         const selectedTaluk = talukSelect.value.trim();
         const selectedHobli = hobliSelect.value.trim();
+        const data = combinedData();
         let villages;
 
         if (!selectedTaluk && !selectedHobli) {
-            // No taluk & no hobli -> all villages
-            villages = getUnique(allData.map(r => r.Village));
+            villages = getUnique(data.map(r => r.Village));
         } else if (selectedTaluk && !selectedHobli) {
-            // Taluk selected, hobli not -> villages in that taluk
             villages = getUnique(
-                allData
+                data
                     .filter(r => (r.Taluk || '').trim() === selectedTaluk)
                     .map(r => r.Village)
             );
         } else if (selectedTaluk && selectedHobli) {
-            // Taluk + Hobli selected -> only villages for that combination
             villages = getUnique(
-                allData
-                    .filter(r => (r.Taluk || '').trim() === selectedTaluk &&
-                                 (r.Hobli || '').trim() === selectedHobli)
+                data
+                    .filter(r =>
+                        (r.Taluk || '').trim() === selectedTaluk &&
+                        (r.Hobli || '').trim() === selectedHobli
+                    )
                     .map(r => r.Village)
             );
         } else {
-            // Rare: hobli selected without taluk
             villages = getUnique(
-                allData
+                data
                     .filter(r => (r.Hobli || '').trim() === selectedHobli)
                     .map(r => r.Village)
             );
@@ -503,12 +589,16 @@
         populateSelect(villageSelect, villages, 'All Villages');
     }
 
-    function displayRows(records) {
+    function displayRows(records, view) {
         tableBody.innerHTML = '';
 
-        // Filter out rows where CalculatedAmount is blank
+        const isSuccess = (view === 'success');
+        const colOrder = isSuccess ? columnOrderSuccess : columnOrderFailure;
+
+        const lastField = isSuccess ? 'CalculatedAmount' : 'PaymentStatus';
+
         const validRecords = records.filter(r => {
-            const val = (r.CalculatedAmount || '').toString().trim();
+            const val = (r[lastField] || '').toString().trim();
             return val !== '';
         });
 
@@ -530,10 +620,10 @@
         slice.forEach(rec => {
             const tr = document.createElement('tr');
 
-            columnOrder.forEach(field => {
+            colOrder.forEach(field => {
                 const td = document.createElement('td');
                 td.textContent = rec[field] || '';
-                if (field === 'CalculatedAmount') {
+                if (field === 'CalculatedAmount' || field === 'PaymentStatus') {
                     td.classList.add('calculated');
                 }
                 tr.appendChild(td);
@@ -544,7 +634,7 @@
     }
 
     function applyFilter() {
-        if (!allData.length) {
+        if (!allSuccess.length && !allFailure.length) {
             alert('Data is still loading. Please wait a moment and try again.');
             return;
         }
@@ -566,7 +656,9 @@
             return;
         }
 
-        const filteredData = allData.filter(rec => {
+        const source = (currentView === 'success') ? allSuccess : allFailure;
+
+        const filteredData = source.filter(rec => {
             const v = (field) => (rec[field] || '').toString().toLowerCase();
             return (!filters.FarmerID  || v('FarmerID').includes(filters.FarmerID)) &&
                    (!filters.Taluk     || v('Taluk') === filters.Taluk) &&
@@ -578,13 +670,13 @@
                    (!filters.OwnerName || v('OwnerName').includes(filters.OwnerName));
         });
 
-        displayRows(filteredData);
+        displayRows(filteredData, currentView);
     }
 
     function resetFilters() {
         document.querySelectorAll('.filter-grid input').forEach(input => input.value = '');
         talukSelect.selectedIndex = 0;
-        updateHobliOptions(); // will reset hobli & village based on no taluk
+        updateHobliOptions();
         hobliSelect.selectedIndex = 0;
         updateVillageOptions();
 
@@ -599,7 +691,7 @@
         document.getElementById('filterBtn').addEventListener('click', applyFilter);
         document.getElementById('resetBtn').addEventListener('click', resetFilters);
 
-        // Cascading events
+        // Cascading dropdowns
         talukSelect.addEventListener('change', () => {
             updateHobliOptions();
         });
@@ -613,11 +705,22 @@
                 if (e.key === 'Enter') applyFilter();
             });
         });
+
+        // Toggle between success / failure views
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                currentView = btn.getAttribute('data-view');
+                renderTableHeader(currentView);
+
+                tableBody.innerHTML = '';
+                noDataMsg.style.display = 'block';
+                noDataMsg.textContent = `You are now viewing ${currentView === 'success' ? 'Successful Payments' : 'Failure Cases'}. Enter filters and click "Search Record".`;
+            });
+        });
     });
 </script>
 </body>
 </html>
-
-
-
-
