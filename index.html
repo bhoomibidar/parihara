@@ -178,7 +178,8 @@
         }
 
         .btn-container {
-            margin-top: 18px;
+            margin-top: 4px;
+            margin-bottom: 12px;
             text-align: right;
         }
         button {
@@ -329,34 +330,23 @@
 
 <div class="container">
 
-    <!-- 1. PAYMENT RECORDS (ABOVE) -->
+    <!-- 1. SEARCH CARD (TOP – THIS IS THE PART YOU SAID IS CORRECT) -->
     <div class="card">
-        <h3 class="card-title">🏦 Parihara Payment Records</h3>
+        <h3 class="card-title">🔍 Search Beneficiary Details</h3>
 
-        <!-- View toggle: Success vs Failure -->
+        <!-- BUTTONS ABOVE SUCCESS / FAILURE -->
+        <div class="btn-container">
+            <button id="resetBtn">Reset</button>
+            <button id="filterBtn">Search Record</button>
+        </div>
+
+        <!-- SUCCESS / FAILURE TOGGLE BELOW BUTTONS -->
         <div class="view-toggle">
             <button class="view-btn active" data-view="success">Successful Payments</button>
             <button class="view-btn" data-view="failure">Failure Cases</button>
         </div>
         
-        <div class="table-responsive">
-            <table id="data-table">
-                <thead>
-                    <tr id="table-header-row">
-                        <!-- filled dynamically -->
-                    </tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-            </table>
-            <div id="loading-msg" class="loading">Connecting to payment database...</div>
-            <div id="no-data-msg" class="loading" style="display:none;">Please enter search details and click "Search Record".</div>
-        </div>
-    </div>
-
-    <!-- 2. SEARCH CARD (BELOW) -->
-    <div class="card">
-        <h3 class="card-title">🔍 Search Beneficiary Details</h3>
-        
+        <!-- GRID BELOW ONLY -->
         <div class="filter-grid">
             <div class="form-group">
                 <label for="filter-FarmerID">Farmer ID</label>
@@ -397,10 +387,23 @@
                 <input id="filter-OwnerName" type="text" placeholder="Enter Owner Name">
             </div>
         </div>
+    </div>
 
-        <div class="btn-container">
-            <button id="resetBtn">Reset</button>
-            <button id="filterBtn">Search Record</button>
+    <!-- 2. PAYMENT RECORDS (BOTTOM – SHOW RESULTS HERE) -->
+    <div class="card">
+        <h3 class="card-title">🏦 Parihara Payment Records</h3>
+
+        <div class="table-responsive">
+            <table id="data-table">
+                <thead>
+                    <tr id="table-header-row">
+                        <!-- filled dynamically -->
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+            <div id="loading-msg" class="loading">Connecting to payment database...</div>
+            <div id="no-data-msg" class="loading" style="display:none;">Please enter search details and click "Search Record".</div>
         </div>
     </div>
 
