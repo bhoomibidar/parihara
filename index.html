@@ -3,114 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beneficiary Payment Status | Govt. of Karnataka</title>
+    <title>Parihara Payment Status – Kharif 2025–26 | DC Office Bidar</title>
     <style>
         * { box-sizing: border-box; }
         body {
             font-family: "Noto Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f6f9;
+            background-color: #f8f4fb;   /* light background */
             color: #222;
         }
 
-        /* Top tricolour strip */
-        .flag-strip {
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(to right, #ff9933 0%, #ffffff 50%, #138808 100%);
+        /* MAIN HEADER – like original site */
+        header.main-header {
+            background: #fff4fb;
+            border-bottom: 3px solid #9c004d;
+            padding: 8px 24px 6px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-block.center {
+            flex-direction: column;
+            text-align: center;
+            gap: 3px;
+        }
+        .profile-pic {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 3px solid #c00060;
+            object-fit: cover;
+        }
+        .official-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #3b1842;
+        }
+        .official-desg {
+            font-size: 0.78rem;
+            opacity: 0.85;
+            color: #7b516d;
         }
 
-        /* HEADER */
-        header {
-            background: #0b3c7c; /* Deep govt blue */
-            color: white;
-            padding: 15px 15px 10px 15px;
-            border-bottom: 4px solid #ffb300; /* saffron accent */
-            text-align: center;
+        .dept-main-title {
+            font-size: 1.1rem;
+            letter-spacing: 0.12em;
+            font-weight: 700;
+            color: #004a9f;
         }
-        .govt-line {
-            font-size: 0.9rem;
-            letter-spacing: 0.08em;
+        .dept-subtitle {
+            font-size: 0.86rem;
             text-transform: uppercase;
-            opacity: 0.95;
-        }
-        .dept-line {
-            font-size: 1.2rem;
+            color: #9c004d;
             font-weight: 600;
-            margin-top: 6px;
         }
-        .district-line {
-            font-size: 0.95rem;
-            margin-top: 2px;
-            opacity: 0.9;
+        .dept-govt-line {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            color: #555;
+            letter-spacing: 0.08em;
         }
         .scheme-line {
-            margin-top: 8px;
-            font-size: 0.9rem;
+            margin-top: 2px;
+            font-size: 0.85rem;
             font-weight: 600;
-            text-transform: uppercase;
-            color: #ffe082;
+            color: #9c004d;
         }
 
         .emblem-wrapper {
-            margin: 8px auto 5px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .emblem-circle {
-            width: 70px;
-            height: 70px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background-color: #ffffff;
+            background: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 6px rgba(0,0,0,0.25);
-            overflow: hidden;
+            box-shadow: 0 0 4px rgba(0,0,0,0.15);
         }
-        .emblem-circle img {
-            max-width: 72px;
-            max-height: 72px;
-        }
-        .emblem-placeholder-text {
-            font-size: 0.7rem;
-            color: #0b3c7c;
-            text-align: center;
-            padding: 4px;
+        .emblem-wrapper img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
-        /* News ticker */
+        @media (max-width: 768px) {
+            header.main-header {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+                text-align: center;
+            }
+            .header-block {
+                justify-content: center;
+            }
+            .header-block.center {
+                order: -1;
+            }
+        }
+
+        /* Marquee */
         .news-ticker {
-            background-color: #e3f2fd;
-            color: #0d47a1;
+            background-color: #ffeef7;
+            color: #7a0040;
             padding: 6px 10px;
             font-size: 0.9rem;
-            border-bottom: 1px solid #bbdefb;
+            border-bottom: 1px solid #f3c7dd;
         }
 
         .container {
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 15px;
+            margin: 18px auto 30px auto;
+            padding: 0 16px 0 16px;
         }
 
         .card {
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-top: 3px solid #0b3c7c;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 20px 20px 18px 20px;
+            margin-bottom: 18px;
+            border: 2px solid #f0c1dc;              /* pink border like tiles */
+            border-top: 4px solid #c00060;
         }
         .card-title {
             margin-top: 0;
-            color: #0b3c7c;
-            border-bottom: 1px solid #eee;
+            color: #7a0040;
+            border-bottom: 1px solid #f3e1f0;
             padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
+            margin-bottom: 18px;
+            font-size: 1.05rem;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -118,7 +148,7 @@
 
         .filter-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
             gap: 15px;
         }
         .form-group {
@@ -126,25 +156,25 @@
             flex-direction: column;
         }
         .form-group label {
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 4px;
-            color: #444;
+            color: #5c3550;
         }
         .form-group input,
         .form-group select {
             padding: 7px 8px;
-            border: 1px solid #c5c5c5;
-            border-radius: 3px;
+            border: 1px solid #d1b3c6;
+            border-radius: 6px;
             font-size: 0.9rem;
             background-color: #fff;
             transition: border 0.2s, box-shadow 0.2s;
         }
         .form-group input:focus,
         .form-group select:focus {
-            border-color: #0b3c7c;
+            border-color: #9c004d;
             outline: none;
-            box-shadow: 0 0 3px rgba(11, 60, 124, 0.4);
+            box-shadow: 0 0 3px rgba(156, 0, 77, 0.4);
         }
 
         .btn-container {
@@ -152,22 +182,24 @@
             text-align: right;
         }
         button {
-            background-color: #0b3c7c;
+            background-color: #9c004d;
             color: white;
             border: none;
             padding: 9px 22px;
-            font-size: 0.9rem;
-            border-radius: 3px;
+            font-size: 0.88rem;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: 600;
             letter-spacing: 0.02em;
-            transition: background 0.2s, transform 0.05s;
+            transition: background 0.2s, transform 0.05s, box-shadow 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.18);
         }
         button:hover {
-            background-color: #123f84;
+            background-color: #b6005a;
         }
         button:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.25);
         }
         button#resetBtn {
             background-color: #757575;
@@ -181,31 +213,29 @@
         .view-toggle {
             display: flex;
             gap: 8px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 6px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #f3e1f0;
+            padding-bottom: 8px;
         }
-
         .view-btn {
-            background-color: #e3f2fd;
-            border: 1px solid #bbdefb;
-            color: #0b3c7c;
-            padding: 6px 14px;
+            background-color: #ffe4f3;
+            border: 1px solid #f0c1dc;
+            color: #7a0040;
+            padding: 6px 16px;
             font-size: 0.8rem;
             border-radius: 20px;
             cursor: pointer;
         }
-
         .view-btn.active {
-            background-color: #0b3c7c;
+            background-color: #9c004d;
             color: #fff;
-            border-color: #0b3c7c;
+            border-color: #9c004d;
         }
 
         .table-responsive {
             overflow-x: auto;
-            border: 1px solid #ddd;
-            border-radius: 3px;
+            border: 1px solid #f0c1dc;
+            border-radius: 10px;
             max-height: 600px;
         }
         table {
@@ -214,21 +244,21 @@
             font-size: 0.9rem;
         }
         th, td {
-            padding: 10px 12px;
+            padding: 9px 10px;
             text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #f5e3f0;
         }
         th {
-            background-color: #f3f4f6;
-            color: #333;
+            background-color: #fff7fd;
+            color: #5c3550;
             position: sticky;
             top: 0;
             font-weight: 700;
-            border-bottom: 2px solid #ccc;
+            border-bottom: 2px solid #f0c1dc;
             z-index: 1;
         }
-        tbody tr:nth-child(even) { background-color: #fafafa; }
-        tbody tr:hover { background-color: #e8f0fe; }
+        tbody tr:nth-child(even) { background-color: #fdf7ff; }
+        tbody tr:hover { background-color: #f5e3f5; }
         td.calculated {
             color: #1b5e20;
             font-weight: 700;
@@ -237,7 +267,7 @@
 
         .loading {
             text-align: center;
-            padding: 16px;
+            padding: 14px;
             color: #666;
             font-style: italic;
             font-size: 0.9rem;
@@ -246,40 +276,84 @@
         footer {
             text-align: center;
             padding: 12px;
-            background-color: #0b3c7c;
+            background-color: #7a0040;
             color: white;
             font-size: 0.8rem;
             margin-top: 30px;
-            border-top: 4px solid #138808;
+            border-top: 4px solid #ffb300;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="flag-strip"></div>
-
-<header>
-    <div class="govt-line">Government of Karnataka</div>
-    <div class="emblem-wrapper">
-        <div class="emblem-circle">
-            <img src="gok.png" alt="Government of Karnataka Emblem" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+<header class="main-header">
+    <div class="header-block left">
+        <img src="dc_profile.png" alt="DC" class="profile-pic">
+        <div>
+            <div class="official-name">Smt. Shilpa Sharma, IAS</div>
+            <div class="official-desg">Deputy Commissioner & District Magistrate</div>
         </div>
     </div>
 
-    <div class="dept-line">Deputy Commissioner Office, Bidar</div>
-    <div class="district-line">Revenue Department</div>
-    <div class="scheme-line">Parihara Payment Status – Kharif 2025–26</div>
+    <div class="header-block center">
+        <!-- EMBLEM ABOVE TEXT -->
+        <div class="emblem-wrapper">
+            <img src="gok.png" alt="Government of Karnataka Emblem">
+        </div>
+        <div class="dept-main-title">DEPUTY COMMISSIONER OFFICE, BIDAR</div>
+        <div class="dept-subtitle">REVENUE DEPARTMENT</div>
+        <div class="dept-govt-line">GOVERNMENT OF KARNATAKA</div>
+        <div class="scheme-line">Parihara Payment Status – Kharif 2025–26</div>
+    </div>
+
+    <div class="header-block right">
+        <div>
+            <div class="official-name" style="text-align:right;">Sri Shivanand B Karale, KAS</div>
+            <div class="official-desg" style="text-align:right;">Additional Deputy Commissioner, Bidar</div>
+        </div>
+        <img src="adc_profile.png" alt="ADC" class="profile-pic">
+    </div>
 </header>
 
 <div class="news-ticker">
-  <marquee behavior="scroll" direction="left" style="color: red; font-weight: bold;">
-    Important: Parihara payment disbursement is under process. Farmers are requested to verify Farmer ID, Taluk, Hobli, Village, Survey Number, Surnoc and Hissa Number carefully before relying on the information displayed.
-  </marquee>
+    <marquee behavior="scroll" direction="left" style="color:#b0004d; font-weight:600;">
+        Parihara payment disbursement is processed. Farmers are requested to verify Farmer ID, Taluk, Hobli, Village, Survey Number, Surnoc and Hissa Number carefully before relying on the information displayed. – For Payment Status & Failure Cases, search below.
+    </marquee>
 </div>
 
 <div class="container">
 
-    <!-- Search card -->
+    <!-- 1. PAYMENT RECORDS (ABOVE) -->
+    <div class="card">
+        <h3 class="card-title">🏦 Parihara Payment Records</h3>
+
+        <!-- View toggle: Success vs Failure -->
+        <div class="view-toggle">
+            <button class="view-btn active" data-view="success">Successful Payments</button>
+            <button class="view-btn" data-view="failure">Failure Cases</button>
+        </div>
+        
+        <div class="table-responsive">
+            <table id="data-table">
+                <thead>
+                    <tr id="table-header-row">
+                        <!-- filled dynamically -->
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+            <div id="loading-msg" class="loading">Connecting to payment database...</div>
+            <div id="no-data-msg" class="loading" style="display:none;">Please enter search details and click "Search Record".</div>
+        </div>
+    </div>
+
+    <!-- 2. SEARCH CARD (BELOW) -->
     <div class="card">
         <h3 class="card-title">🔍 Search Beneficiary Details</h3>
         
@@ -330,34 +404,10 @@
         </div>
     </div>
 
-    <!-- Payment records card -->
-    <div class="card">
-        <h3 class="card-title">📋 Payment Records</h3>
-
-        <!-- View toggle: Success vs Failure -->
-        <div class="view-toggle">
-            <button class="view-btn active" data-view="success">Successful Payments</button>
-            <button class="view-btn" data-view="failure">Failure Cases</button>
-        </div>
-        
-        <div class="table-responsive">
-            <table id="data-table">
-                <thead>
-                    <tr id="table-header-row">
-                        <!-- Filled dynamically by JS -->
-                    </tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-            </table>
-            <div id="loading-msg" class="loading">Connecting to database...</div>
-            <div id="no-data-msg" class="loading" style="display:none;">Please enter search details and click "Search Record".</div>
-        </div>
-    </div>
-
 </div>
 
 <footer>
-    &copy; 2025 Department of Revenue & Land Records, Government of Karnataka. All Rights Reserved.
+    &copy; 2025 Department of Revenue & Land Records, Deputy Commissioner Office Bidar, Government of Karnataka. All Rights Reserved.
 </footer>
 
 <script>
@@ -386,6 +436,16 @@
     const talukSelect     = document.getElementById('filter-Taluk');
     const hobliSelect     = document.getElementById('filter-Hobli');
     const villageSelect   = document.getElementById('filter-Village');
+
+    const filterFarmerID  = document.getElementById('filter-FarmerID');
+    const filterSurveyNo  = document.getElementById('filter-SurveyNo');
+    const filterSurnoc    = document.getElementById('filter-Surnoc');
+    const filterHissaNo   = document.getElementById('filter-HissaNo');
+    const filterOwnerName = document.getElementById('filter-OwnerName');
+
+    const filterBtn       = document.getElementById('filterBtn');
+    const resetBtn        = document.getElementById('resetBtn');
+    const viewButtons     = document.querySelectorAll('.view-btn');
 
     const columnOrderSuccess = [
         'FarmerID',
@@ -437,8 +497,6 @@
 
     async function fetchData() {
         try {
-            console.log('Fetching:', apiUrlSuccess, apiUrlFailure);
-
             const [resSuccess, resFailure] = await Promise.all([
                 fetch(apiUrlSuccess),
                 fetch(apiUrlFailure)
@@ -460,7 +518,6 @@
                         if (!h) return;
                         obj[h] = row[i] || '';
                     });
-                    // Normalize important fields
                     obj.FarmerID         = obj.FarmerID || '';
                     obj.OwnerName        = obj.OwnerName || obj['Name as in FRUITS'] || '';
                     obj.CalculatedAmount = obj.CalculatedAmount || '';
@@ -488,9 +545,6 @@
                 });
             }
 
-            console.log('Sample success record:', allSuccess[0]);
-            console.log('Sample failure record:', allFailure[0]);
-
             // Dropdowns: union of Taluk from both datasets
             const uniqueTaluk = getUnique([
                 ...allSuccess.map(r => r.Taluk),
@@ -510,17 +564,9 @@
             renderTableHeader('success');
 
         } catch (err) {
-            console.error('Error fetching data:', err);
-            loadingMsg.textContent = 'Error loading data. Check API key, Sheet sharing & console.';
+            loadingMsg.textContent = 'Error loading data. Please check API key / Sheet sharing.';
             loadingMsg.style.color = 'red';
         }
-    }
-
-    function showNoData(msg) {
-        tableBody.innerHTML = '';
-        loadingMsg.style.display = 'none';
-        noDataMsg.style.display = 'block';
-        if (msg) noDataMsg.textContent = msg;
     }
 
     function renderTableHeader(view) {
@@ -594,7 +640,6 @@
 
         const isSuccess = (view === 'success');
         const colOrder = isSuccess ? columnOrderSuccess : columnOrderFailure;
-
         const lastField = isSuccess ? 'CalculatedAmount' : 'PaymentStatus';
 
         const validRecords = records.filter(r => {
@@ -633,94 +678,94 @@
         });
     }
 
-    function applyFilter() {
-        if (!allSuccess.length && !allFailure.length) {
-            alert('Data is still loading. Please wait a moment and try again.');
-            return;
-        }
+    function applyFilters() {
+        const data = currentView === 'success' ? allSuccess : allFailure;
 
-        const filters = {
-            FarmerID:  document.getElementById('filter-FarmerID').value.trim().toLowerCase(),
-            Taluk:     talukSelect.value.trim().toLowerCase(),
-            Hobli:     hobliSelect.value.trim().toLowerCase(),
-            Village:   villageSelect.value.trim().toLowerCase(),
-            SurveyNo:  document.getElementById('filter-SurveyNo').value.trim().toLowerCase(),
-            Surnoc:    document.getElementById('filter-Surnoc').value.trim().toLowerCase(),
-            HissaNo:   document.getElementById('filter-HissaNo').value.trim().toLowerCase(),
-            OwnerName: document.getElementById('filter-OwnerName').value.trim().toLowerCase()
-        };
+        const farmerFilter  = filterFarmerID.value.trim().toLowerCase();
+        const talukFilter   = talukSelect.value.trim();
+        const hobliFilter   = hobliSelect.value.trim();
+        const villageFilter = villageSelect.value.trim();
+        const surveyFilter  = filterSurveyNo.value.trim().toLowerCase();
+        const surnocFilter  = filterSurnoc.value.trim().toLowerCase();
+        const hissaFilter   = filterHissaNo.value.trim().toLowerCase();
+        const ownerFilter   = filterOwnerName.value.trim().toLowerCase();
 
-        const anyFilter = Object.values(filters).some(v => v.length > 0);
-        if (!anyFilter) {
-            alert('Please enter at least one search field / dropdown before clicking "Search Record".');
-            return;
-        }
+        const filtered = data.filter(r => {
+            const farmerID  = (r.FarmerID || '').toLowerCase();
+            const taluk     = (r.Taluk || '').trim();
+            const hobli     = (r.Hobli || '').trim();
+            const village   = (r.Village || '').trim();
+            const surveyNo  = (r.SurveyNo || '').toLowerCase();
+            const surnoc    = (r.Surnoc || '').toLowerCase();
+            const hissaNo   = (r.HissaNo || '').toLowerCase();
+            const ownerName = (r.OwnerName || '').toLowerCase();
 
-        const source = (currentView === 'success') ? allSuccess : allFailure;
+            if (farmerFilter && !farmerID.includes(farmerFilter)) return false;
+            if (talukFilter && taluk !== talukFilter) return false;
+            if (hobliFilter && hobli !== hobliFilter) return false;
+            if (villageFilter && village !== villageFilter) return false;
+            if (surveyFilter && !surveyNo.includes(surveyFilter)) return false;
+            if (surnocFilter && !surnoc.includes(surnocFilter)) return false;
+            if (hissaFilter && !hissaNo.includes(hissaFilter)) return false;
+            if (ownerFilter && !ownerName.includes(ownerFilter)) return false;
 
-        const filteredData = source.filter(rec => {
-            const v = (field) => (rec[field] || '').toString().toLowerCase();
-            return (!filters.FarmerID  || v('FarmerID').includes(filters.FarmerID)) &&
-                   (!filters.Taluk     || v('Taluk') === filters.Taluk) &&
-                   (!filters.Hobli     || v('Hobli') === filters.Hobli) &&
-                   (!filters.Village   || v('Village') === filters.Village) &&
-                   (!filters.SurveyNo  || v('SurveyNo').includes(filters.SurveyNo)) &&
-                   (!filters.Surnoc    || v('Surnoc').includes(filters.Surnoc)) &&
-                   (!filters.HissaNo   || v('HissaNo').includes(filters.HissaNo)) &&
-                   (!filters.OwnerName || v('OwnerName').includes(filters.OwnerName));
+            return true;
         });
 
-        displayRows(filteredData, currentView);
+        displayRows(filtered, currentView);
     }
 
     function resetFilters() {
-        document.querySelectorAll('.filter-grid input').forEach(input => input.value = '');
-        talukSelect.selectedIndex = 0;
-        updateHobliOptions();
-        hobliSelect.selectedIndex = 0;
-        updateVillageOptions();
+        filterFarmerID.value  = '';
+        filterSurveyNo.value  = '';
+        filterSurnoc.value    = '';
+        filterHissaNo.value   = '';
+        filterOwnerName.value = '';
+        talukSelect.value     = '';
+        populateSelect(hobliSelect,   [], 'All Hoblis');
+        populateSelect(villageSelect, [], 'All Villages');
 
         tableBody.innerHTML = '';
         noDataMsg.style.display = 'block';
         noDataMsg.textContent = 'Please enter search details and click "Search Record".';
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchData();
+    // ===== EVENT LISTENERS =====
+    talukSelect.addEventListener('change', () => {
+        updateHobliOptions();
+    });
 
-        document.getElementById('filterBtn').addEventListener('click', applyFilter);
-        document.getElementById('resetBtn').addEventListener('click', resetFilters);
+    hobliSelect.addEventListener('change', () => {
+        updateVillageOptions();
+    });
 
-        // Cascading dropdowns
-        talukSelect.addEventListener('change', () => {
-            updateHobliOptions();
-        });
+    filterBtn.addEventListener('click', () => {
+        applyFilters();
+    });
 
-        hobliSelect.addEventListener('change', () => {
-            updateVillageOptions();
-        });
+    resetBtn.addEventListener('click', () => {
+        resetFilters();
+    });
 
-        document.querySelectorAll('.filter-grid input').forEach(input => {
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') applyFilter();
-            });
-        });
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const view = btn.getAttribute('data-view');
+            if (view === currentView) return;
 
-        // Toggle between success / failure views
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+            currentView = view;
+            viewButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-                currentView = btn.getAttribute('data-view');
-                renderTableHeader(currentView);
+            renderTableHeader(currentView);
 
-                tableBody.innerHTML = '';
-                noDataMsg.style.display = 'block';
-                noDataMsg.textContent = `You are now viewing ${currentView === 'success' ? 'Successful Payments' : 'Failure Cases'}. Enter filters and click "Search Record".`;
-            });
+            // If filters already entered, re-apply on new view
+            applyFilters();
         });
     });
+
+    // Initial load
+    fetchData();
 </script>
+
 </body>
 </html>
