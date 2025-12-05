@@ -330,7 +330,7 @@
 
 <div class="container">
 
-    <!-- 1. SEARCH CARD (TOP – THIS IS THE PART YOU SAID IS CORRECT) -->
+    <!-- 1. SEARCH CARD -->
     <div class="card">
         <h3 class="card-title">🔍 Search Beneficiary Details</h3>
 
@@ -381,10 +381,6 @@
             <div class="form-group">
                 <label for="filter-HissaNo">Hissa No</label>
                 <input id="filter-HissaNo" type="text" placeholder="Ex: 1">
-            </div>
-            <div class="form-group">
-                <label for="filter-OwnerName">Owner Name</label>
-                <input id="filter-OwnerName" type="text" placeholder="Enter Owner Name">
             </div>
         </div>
     </div>
@@ -444,7 +440,6 @@
     const filterSurveyNo  = document.getElementById('filter-SurveyNo');
     const filterSurnoc    = document.getElementById('filter-Surnoc');
     const filterHissaNo   = document.getElementById('filter-HissaNo');
-    const filterOwnerName = document.getElementById('filter-OwnerName');
 
     const filterBtn       = document.getElementById('filterBtn');
     const resetBtn        = document.getElementById('resetBtn');
@@ -691,7 +686,6 @@
         const surveyFilter  = filterSurveyNo.value.trim().toLowerCase();
         const surnocFilter  = filterSurnoc.value.trim().toLowerCase();
         const hissaFilter   = filterHissaNo.value.trim().toLowerCase();
-        const ownerFilter   = filterOwnerName.value.trim().toLowerCase();
 
         const filtered = data.filter(r => {
             const farmerID  = (r.FarmerID || '').toLowerCase();
@@ -701,7 +695,6 @@
             const surveyNo  = (r.SurveyNo || '').toLowerCase();
             const surnoc    = (r.Surnoc || '').toLowerCase();
             const hissaNo   = (r.HissaNo || '').toLowerCase();
-            const ownerName = (r.OwnerName || '').toLowerCase();
 
             if (farmerFilter && !farmerID.includes(farmerFilter)) return false;
             if (talukFilter && taluk !== talukFilter) return false;
@@ -710,7 +703,6 @@
             if (surveyFilter && !surveyNo.includes(surveyFilter)) return false;
             if (surnocFilter && !surnoc.includes(surnocFilter)) return false;
             if (hissaFilter && !hissaNo.includes(hissaFilter)) return false;
-            if (ownerFilter && !ownerName.includes(ownerFilter)) return false;
 
             return true;
         });
@@ -723,7 +715,6 @@
         filterSurveyNo.value  = '';
         filterSurnoc.value    = '';
         filterHissaNo.value   = '';
-        filterOwnerName.value = '';
         talukSelect.value     = '';
         populateSelect(hobliSelect,   [], 'All Hoblis');
         populateSelect(villageSelect, [], 'All Villages');
